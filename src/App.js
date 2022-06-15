@@ -1,22 +1,40 @@
-import logo from './logo.svg';
+import { useState, useEffect } from 'react';
 import './App.css';
+import Calendar from 'react-calendar';
+import Table from './components/Table'
+import axios from 'axios'
+const API = 'https://www.pslib.cz/tomas.kazda/api/kurzycnbapi.php?date='
 
-function App() {
+function App(props) {
+  const [datevalue, setDatevalue] = useState(new Date())
+  const [tablevalue, setTablevalue] = useState({})
+  const fetchData = () => {
+    axios.get(API+datevalue.toISOString(), {
+        headers: {
+            "Content-Type": "application/json",
+         }
+    })
+    .then(response => {
+      setTablevalue(response.data);
+    })
+    .catch(error => {
+        //setError(true);
+        //setResponse(null);
+    })
+    .then(()=>{
+        //setIsLoading(false);
+    });
+}
+
+
+  useEffect(() => {
+    fetchData()
+  }, [datevalue])
+  
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <Table tabledata={tablevalue} />
       </header>
     </div>
   );
