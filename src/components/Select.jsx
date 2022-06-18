@@ -1,21 +1,23 @@
 import { useState, useEffect } from 'react';
-const Select = ({data, result = val => null, ...rest}) => 
+let Select = ({data, result = val => null,selected, ...rest}) => 
 {
-    const [value, setValue] = useState("")
-    console.log(value)
+    let [value, setValue] = useState(null)
+   
     useEffect(() => {
         result(value)
     }, [value])
+    console.log(value);
     let cnt =[]
-    if(Array.isArray(data))
+    if(Array.isArray(data.items))
     {
-        cnt = data.map((items) => (
+
+        cnt = data.items.map((items) => (
             <option key={items.kod}  value={items.kod}>{items.kod}</option>
           ))
     }
     
     return(
-        <select onChange={(e) => setValue(e.target.value)}>
+        <select  value={selected} onChange={(e) => setValue(e.target.value)} >
             {cnt}
           </select>
     )
